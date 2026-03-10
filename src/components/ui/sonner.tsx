@@ -11,7 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const isDark = theme === "dark"
   const isLight = theme === "light"
 
-  const baseStyle: CSSProperties = isLight
+  const baseStyle = isLight
     ? {
         "--normal-bg": "#020617", // near-black
         "--normal-text": "#f9fafb",
@@ -43,7 +43,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         error: <OctagonXIcon className="size-4" />,
         loading: <Loader2Icon className="size-4 animate-spin" />,
       }}
-      style={baseStyle}
+      style={baseStyle as CSSProperties}
       toastOptions={{
         classNames: {
           toast: "cn-toast",
