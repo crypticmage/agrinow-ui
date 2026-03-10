@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Sprout,
@@ -94,7 +94,7 @@ const stats = [
   },
 ];
 
-const Dashboard = () => {
+const DashboardContent = () => {
   const role = useAppStore((s) => s.currentUser?.role);
   const loading = useSimulatedLoading(1000);
   const searchParams = useSearchParams();
@@ -400,4 +400,16 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default function Dashboard() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-6">
+          <StatCardSkeleton />
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
+  );
+}
