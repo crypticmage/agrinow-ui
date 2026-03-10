@@ -13,7 +13,9 @@ export function MobileBottomNav() {
       <div className="flex items-center justify-around h-14">
         {tabs.map((tab) => {
           const active =
-            tab.url === "/" ? pathname === "/" : pathname?.startsWith(tab.url);
+            tab.url === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname?.startsWith(tab.url);
           return (
             <Link
               key={tab.url}
