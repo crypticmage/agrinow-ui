@@ -39,3 +39,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# OS-specific
+Thumbs.db
+
+# Cursor / local tooling
+.cursor/
+*.code-workspace
+
+# Local environment overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
