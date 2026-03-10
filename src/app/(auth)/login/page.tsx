@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sprout, LogIn, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLogin } from "@/hooks/queries/useAuth";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod/v3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAppStore } from "@/stores/appStore";
 
 const usernameRegex = /^[a-zA-Z0-9._-]{3,}$/;
 
@@ -47,6 +48,13 @@ const Login = () => {
   });
 
   const { mutate: login, isPending } = useLogin();
+  const logout = useAppStore((s) => s.logout);
+
+  useEffect(() => {
+    // If the user lands here (e.g. redirected by proxy due to expired token),
+    // ensure their local client state is wiped so it doesn't conflict.
+    logout();
+  }, [logout]);
 
   const onSubmit = (values: LoginValues) => {
     login({ identifier: values.identifier, password: values.password });
