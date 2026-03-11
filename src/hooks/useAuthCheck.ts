@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAppStore } from "@/stores/appStore";
 import { toast } from "sonner";
 
 export function useAuthCheck() {
   const router = useRouter();
+  const pathname = usePathname();
   const isAuthenticated = useAppStore((s) => s.isAuthenticated);
   const currentUser = useAppStore((s) => s.currentUser);
   const logout = useAppStore((s) => s.logout);
@@ -28,32 +29,27 @@ export function useAuthCheck() {
 
     // 2. Authenticated, but token is expired client-side
     const checkExpiry = () => {
-      console.log(`[useAuthCheck] Running checkExpiry. User:`, currentUser?.userName);
-      
+      // If the user's localized storage doesn't even have the exp field, force a fresh login
+      if (currentUser && currentUser.exp === undefined) {
+        toast.info("Session updated, please log in again.");
+        logout();
+        router.push("/login");
+        return;
+      }
+
       if (currentUser?.exp) {
         const currentTime = Math.floor(Date.now() / 1000);
-        console.log(`[useAuthCheck] Current Time (Unix):`, currentTime);
-        console.log(`[useAuthCheck] Token Expiry (Unix):`, currentUser.exp);
-        console.log(`[useAuthCheck] Time Remaining (Seconds):`, currentUser.exp - currentTime);
-
         if (currentUser.exp < currentTime) {
-          console.error(`[useAuthCheck] ❌ Token has expired! Forcing logout...`);
           toast.error("Session expired, please log in again.");
           logout();
           router.push("/login");
-        } else {
-          console.log(`[useAuthCheck] ✅ Token is valid.`);
         }
-      } else {
-        console.warn(`[useAuthCheck] ⚠️ No 'exp' found on currentUser!`, currentUser);
       }
     };
 
-    // Check immediately and then every minute
+    // Check on mount and on every navigation
     checkExpiry();
-    const intervalId = setInterval(checkExpiry, 60000);
-    return () => clearInterval(intervalId);
-  }, [isAuthenticated, isHydrated, currentUser, logout, router]);
+  }, [isAuthenticated, isHydrated, currentUser, logout, router, pathname]);
 
   // Return true during SSR/Hydration to prevent visual layout flashes
   return isHydrated ? isAuthenticated : true;
