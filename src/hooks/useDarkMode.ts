@@ -1,24 +1,17 @@
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const stored = localStorage.getItem("seedsense-theme");
-    if (stored) return stored === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
+  // Avoid hydration mismatch
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("seedsense-theme", isDark ? "dark" : "light");
-  }, [isDark]);
+    setMounted(true);
+  }, []);
 
-  const toggle = () => setIsDark((prev) => !prev);
+  const isDark = mounted ? resolvedTheme === "dark" : false;
+  const toggle = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
 
-  return { isDark, toggle };
+  return { isDark, toggle, mounted };
 }

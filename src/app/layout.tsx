@@ -1,9 +1,18 @@
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { QueryProvider } from "@/components/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "SeedSense",
+    template: "%s | SeedSense",
+  },
+  description: "Seed production tracking & analytics",
+};
 
 const inter = Inter({
   subsets: ["latin"],

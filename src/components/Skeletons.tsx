@@ -55,7 +55,10 @@ export function TableSkeleton({
             ))}
           </div>
           {Array.from({ length: rows }).map((_, r) => (
-            <div key={r} className="flex items-center justify-between border-b py-2 last:border-0">
+            <div
+              key={r}
+              className="flex items-center justify-between border-b py-2 last:border-0"
+            >
               {Array.from({ length: cols }).map((_, c) => (
                 <Skeleton key={c} className="h-4 w-16" />
               ))}
@@ -64,5 +67,36 @@ export function TableSkeleton({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function UserRowSkeleton() {
+  return (
+    <tr className="border-b last:border-0">
+      <td className="p-3">
+        <Skeleton className="h-4 w-4" />
+      </td>
+      <td className="p-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <div className="space-y-1">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-3 w-36" />
+          </div>
+        </div>
+      </td>
+      <td className="p-3 hidden md:table-cell">
+        <Skeleton className="h-5 w-16 rounded-full" />
+      </td>
+      <td className="p-3">
+        <Skeleton className="h-5 w-16 rounded-full" />
+      </td>
+      <td className="p-3 hidden sm:table-cell">
+        <Skeleton className="h-3 w-20" />
+      </td>
+      <td className="p-3">
+        <Skeleton className="h-8 w-8 rounded" />
+      </td>
+    </tr>
   );
 }

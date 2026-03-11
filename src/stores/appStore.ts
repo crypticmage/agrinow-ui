@@ -1,19 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User, UserRole } from "@/types/login";
+import { AuthUser, AuthRole } from "@/types/auth";
 
-// Extend the User type to locally store token expiration
-export interface StoreUser extends User {
-  exp?: number | null;
-}
+export interface StoreUser extends AuthUser {}
 
 interface AppState {
   currentUser: StoreUser | null;
   isAuthenticated: boolean;
   sidebarOpen: boolean;
-  login: (userName: string, email: string, role: UserRole, exp?: number) => void;
+  login: (userName: string, email: string, role: AuthRole, exp?: number) => void;
   logout: () => void;
-  setRole: (role: UserRole) => void;
+  setRole: (role: AuthRole) => void;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
 }
@@ -38,8 +35,7 @@ export const useAppStore = create<AppState>()(
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
     }),
     {
-      name: "seedsense-storage", // name of the item in the storage (must be unique)
-      // by default, it uses localStorage
+      name: "seedsense-storage",
     }
   )
 );
