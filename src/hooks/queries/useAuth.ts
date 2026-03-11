@@ -39,8 +39,22 @@ export const useLogin = () => {
       const role = data?.user?.role ?? data?.role;
       const email: string = data?.user?.email ?? data?.email ?? "";
 
+      let exp: number | undefined;
+      if (token) {
+        try {
+          const parts = token.split(".");
+          if (parts.length === 3) {
+            const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+            const payload = JSON.parse(payloadJson);
+            exp = payload.exp;
+          }
+        } catch (e) {
+          console.error("Failed to parse token client-side", e);
+        }
+      }
+
       if (username && role) {
-        loginStore.login(username, email, role);
+        loginStore.login(username, email, role, exp);
       } else {
         console.warn("Missing user data:", data);
       }
