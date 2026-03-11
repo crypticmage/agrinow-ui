@@ -2,11 +2,16 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User, UserRole } from "@/types/login";
 
+// Extend the User type to locally store token expiration
+export interface StoreUser extends User {
+  exp?: number | null;
+}
+
 interface AppState {
-  currentUser: User | null;
+  currentUser: StoreUser | null;
   isAuthenticated: boolean;
   sidebarOpen: boolean;
-  login: (userName: string, email: string, role: UserRole) => void;
+  login: (userName: string, email: string, role: UserRole, exp?: number) => void;
   logout: () => void;
   setRole: (role: UserRole) => void;
   toggleSidebar: () => void;
@@ -19,9 +24,9 @@ export const useAppStore = create<AppState>()(
       currentUser: null,
       isAuthenticated: false,
       sidebarOpen: true,
-      login: (userName, email, role) =>
+      login: (userName, email, role, exp) =>
         set({
-          currentUser: { id: "1", userName, email, role },
+          currentUser: { id: "1", userName, email, role, exp: exp || null },
           isAuthenticated: true,
         }),
       logout: () => set({ currentUser: null, isAuthenticated: false }),
