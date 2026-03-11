@@ -17,14 +17,18 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Match your local node version
-          cache: 'npm'
+          node-version: '22'
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # Adjust version if you use a specific one locally
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: 🏗️ Build Project
-        run: npm run build
+        run: pnpm run build
 
       # --- DEPLOY TO PRODUCTION ---
       - name: 🌐 Deploy Prod (Main Branch)
