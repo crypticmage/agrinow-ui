@@ -1,4 +1,4 @@
-import { UserRole } from "./login";
+import { UserRole } from "./auth";
 
 export interface StaffMember {
   id: string;
