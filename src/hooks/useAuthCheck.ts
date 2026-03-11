@@ -28,13 +28,24 @@ export function useAuthCheck() {
 
     // 2. Authenticated, but token is expired client-side
     const checkExpiry = () => {
+      console.log(`[useAuthCheck] Running checkExpiry. User:`, currentUser?.userName);
+      
       if (currentUser?.exp) {
         const currentTime = Math.floor(Date.now() / 1000);
+        console.log(`[useAuthCheck] Current Time (Unix):`, currentTime);
+        console.log(`[useAuthCheck] Token Expiry (Unix):`, currentUser.exp);
+        console.log(`[useAuthCheck] Time Remaining (Seconds):`, currentUser.exp - currentTime);
+
         if (currentUser.exp < currentTime) {
+          console.error(`[useAuthCheck] ❌ Token has expired! Forcing logout...`);
           toast.error("Session expired, please log in again.");
           logout();
           router.push("/login");
+        } else {
+          console.log(`[useAuthCheck] ✅ Token is valid.`);
         }
+      } else {
+        console.warn(`[useAuthCheck] ⚠️ No 'exp' found on currentUser!`, currentUser);
       }
     };
 
