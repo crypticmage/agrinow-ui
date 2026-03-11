@@ -21,7 +21,7 @@ export function MobileBottomNav() {
               key={tab.url}
               href={tab.url}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition-colors",
+                "flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] transition-colors cursor-pointer",
                 active ? "text-primary font-medium" : "text-muted-foreground",
               )}
             >

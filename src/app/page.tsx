@@ -1,25 +1,15 @@
-"use client";
+// Server Component: redirect based on cookie presence
+// (Full server-auth requires HttpOnly cookie from backend)
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAppStore } from "@/stores/appStore";
-import Login from "./(auth)/login/page";
+export default async function Home() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token");
 
-export default function Home() {
-  const router = useRouter();
-  const isAuthenticated = useAppStore((state) => state.isAuthenticated);
-  const currentUser = useAppStore((state) => state.currentUser);
-
-  useEffect(() => {
-    if (isAuthenticated && currentUser) {
-      router.replace("/dashboard");
-    }
-  }, [isAuthenticated, currentUser, router]);
-
-  if (!isAuthenticated || !currentUser) {
-    return <Login />;
+  if (token?.value) {
+    redirect("/dashboard");
+  } else {
+    redirect("/login");
   }
-
-  // Brief fallback while replace() is in flight
-  return <div className="min-h-screen bg-background" />;
 }

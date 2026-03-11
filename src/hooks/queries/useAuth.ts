@@ -29,7 +29,10 @@ export const useLogin = () => {
       const token: string = data?.access_token;
 
       if (typeof document !== "undefined" && token) {
-        // Basic cookie. will modify later for better security. Future Plan -> set HttpOnly/SameSite on the server instead.
+        // NOTE: SameSite=Strict & Secure commented out during testing phase
+        // (UI and backend are on different origins). Re-enable in production.
+        // const isSecure = window.location.protocol === "https:" ? "; Secure" : "";
+        // document.cookie = `auth-token=${encodeURIComponent(token)}; Path=/; SameSite=Strict${isSecure}`;
         document.cookie = `auth-token=${encodeURIComponent(token)}; Path=/; SameSite=Lax`;
       }
 

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAppStore } from "@/stores/appStore";
 import { useDarkMode } from "@/hooks/useDarkMode";
+import { formatUsername } from "@/types/user";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +40,7 @@ export function TopNav() {
   const router = useRouter();
   const user = useAppStore((s) => s.currentUser);
   const logout = useAppStore((s) => s.logout);
-  const { isDark, toggle } = useDarkMode();
+  const { isDark, toggle, mounted } = useDarkMode();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -111,7 +112,7 @@ export function TopNav() {
               setSearchQuery("");
               setSearchOpen(false);
             }}
-            className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
@@ -126,7 +127,7 @@ export function TopNav() {
               searchResults.map((r, i) => (
                 <button
                   key={i}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-accent transition-colors"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-accent transition-colors cursor-pointer"
                   onClick={() => {
                     router.push(r.url);
                     setSearchQuery("");
@@ -163,10 +164,10 @@ export function TopNav() {
         variant="ghost"
         size="icon"
         onClick={toggle}
-        className="text-muted-foreground hover:text-foreground hover:bg-accent"
-        title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        className="text-muted-foreground hover:text-foreground hover:bg-accent cursor-pointer"
+        title={mounted && isDark ? "Switch to light mode" : "Switch to dark mode"}
       >
-        {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        {mounted && isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       </Button>
 
       {/* Notifications */}
@@ -194,7 +195,7 @@ export function TopNav() {
               return (
                 <button
                   key={n.id}
-                  className={`w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-accent transition-colors border-b last:border-0 ${!isRead ? "bg-primary/5" : ""}`}
+                  className={`w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-accent transition-colors border-b last:border-0 cursor-pointer ${!isRead ? "bg-primary/5" : ""}`}
                   onClick={() => setReadNotifs((prev) => [...prev, n.id])}
                 >
                   <n.icon className={`h-4 w-4 mt-0.5 shrink-0 ${n.color}`} />
@@ -217,7 +218,7 @@ export function TopNav() {
             <Button
               variant="ghost"
               size="sm"
-              className="w-full text-xs hover:bg-accent"
+              className="w-full text-xs hover:bg-accent cursor-pointer"
               onClick={() => setReadNotifs(notifications.map((n) => n.id))}
             >
               Mark all as read
@@ -228,27 +229,17 @@ export function TopNav() {
 
       {/* User */}
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 hover:bg-accent"
-            />
-          }
-        >
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
-              <User className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <div className="hidden md:block text-left">
-              <p className="text-xs font-medium leading-none">
-                {user?.userName}
-              </p>
-              <p className="text-[10px] text-muted-foreground capitalize">
-                {user?.role}
-              </p>
-            </div>
+        <DropdownMenuTrigger className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-accent transition-colors cursor-pointer outline-hidden group">
+          <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+            <User className="h-4 w-4 text-primary" />
+          </div>
+          <div className="hidden md:flex flex-col items-start gap-0.5">
+            <p className="text-xs font-semibold leading-none text-foreground">
+              {formatUsername(user?.userName || "")}
+            </p>
+            <p className="text-[10px] text-muted-foreground capitalize leading-none font-normal">
+              {user?.role}
+            </p>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
