@@ -8,10 +8,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "SeedSense",
-    template: "%s | SeedSense",
+    default: "Seed Sense",
+    template: "%s | Seed Sense",
   },
   description: "Seed production tracking & analytics",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 const inter = Inter({
