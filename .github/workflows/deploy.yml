@@ -1,4 +1,4 @@
-name: 🚀 Build and Deploy Next.js to cPanel
+name: 🚀 Full-Stack Deploy to cPanel (Node.js/Next.js)
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - main
       - stage
       - dev
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build-and-deploy:
@@ -20,9 +23,9 @@ jobs:
           node-version: '22'
 
       - name: 📦 Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9  # Adjust version if you use a specific one locally
+          version: 9
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -30,35 +33,54 @@ jobs:
       - name: 🏗️ Build Project
         run: pnpm run build
 
-      # --- DEPLOY TO PRODUCTION ---
-      - name: 🌐 Deploy Prod (Main Branch)
+      # --- DEPLOY TO PRODUCTION (Main Branch) ---
+      - name: 🌐 Deploy Prod
         if: github.ref == 'refs/heads/main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME_PROD }}
           password: ${{ secrets.FTP_PASSWORD_PROD }}
-          local-dir: ./out/
+          local-dir: ./
           server-dir: ./
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            .github/**
 
-      # --- DEPLOY TO STAGING ---
-      - name: 🧪 Deploy Stage (Stage Branch)
+      # --- DEPLOY TO STAGING (Stage Branch) ---
+      - name: 🧪 Deploy Stage
         if: github.ref == 'refs/heads/stage'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME_STAGE }}
           password: ${{ secrets.FTP_PASSWORD_STAGE }}
-          local-dir: ./out/
+          local-dir: ./
           server-dir: ./
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            .github/**
 
-      # --- DEPLOY TO DEV ---
-      - name: 🏗️ Deploy Dev (Dev Branch)
+      # --- DEPLOY TO DEV (Dev Branch) ---
+      - name: 🏗️ Deploy Dev
         if: github.ref == 'refs/heads/dev'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME_DEV }}
           password: ${{ secrets.FTP_PASSWORD_DEV }}
-          local-dir: ./out/
+          local-dir: ./
           server-dir: ./
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            .github/**
+
+      # --- TRIGGER RESTART (Universal) ---
+      # This creates a restart.txt file which cPanel watches to reboot the app
+      - name: 🔄 Signal Server Restart
+        run: |
+          mkdir -p tmp
+          touch tmp/restart.txt
