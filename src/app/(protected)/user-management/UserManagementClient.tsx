@@ -21,6 +21,8 @@ import {
   useDeleteUser,
 } from "@/hooks/queries/users";
 import { statCardsConfig } from "@/data/user-management";
+import { LayoutGrid, List } from "lucide-react";
+import OrganisationChart from "./_components/organisation-chart";
 
 export function UserManagementClient() {
   // TanStack Query will automatically pick up the dehydrated state from HydrationBoundary
@@ -33,6 +35,7 @@ export function UserManagementClient() {
   const simulatedLoading = useSimulatedLoading(users.length > 0 ? 0 : 800);
   const loading = simulatedLoading || (queryLoading && users.length === 0);
 
+  const [view, setView] = useState<"table" | "chart">("table");
   const [globalFilter, setGlobalFilter] = useState("");
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
@@ -91,97 +94,127 @@ export function UserManagementClient() {
               Manage team members, roles, and access
             </p>
           </div>
-          <Button
-            onClick={() => setCreateOpen(true)}
-            className="gap-2 shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md border-0 cursor-pointer shadow-emerald-500/20"
-          >
-            <UserPlus className="h-4 w-4" />
-            Create User
-          </Button>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center bg-muted/50 p-1 rounded-lg border border-border/50">
+              <Button
+                variant={view === "table" ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setView("table")}
+                className="h-8 gap-2 px-3 cursor-pointer"
+              >
+                <List className="h-4 w-4" />
+                List
+              </Button>
+              <Button
+                variant={view === "chart" ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setView("chart")}
+                className="h-8 gap-2 px-3 cursor-pointer"
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Chart
+              </Button>
+            </div>
+            <Button
+              onClick={() => setCreateOpen(true)}
+              className="gap-2 shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md border-0 cursor-pointer shadow-emerald-500/20"
+            >
+              <UserPlus className="h-4 w-4" />
+              Create User
+            </Button>
+          </div>
         </div>
 
-        {/* Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {loading && users.length === 0
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <StatCardSkeleton key={i} />
-              ))
-            : statCardsConfig.map(
-                ({ key, label, icon: Icon, color, bg, border }) => (
-                  <div
-                    key={key}
-                    className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/4 p-4 shadow-sm backdrop-blur-md transition-all hover:shadow-md hover:scale-[1.02]"
-                  >
+        {/* Stat Cards - Only show in table view explicitly as requested */}
+        {view === "table" && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {loading && users.length === 0
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <StatCardSkeleton key={i} />
+                ))
+              : statCardsConfig.map(
+                  ({ key, label, icon: Icon, color, bg, border }) => (
                     <div
-                      className={`absolute -right-4 -top-4 h-24 w-24 rounded-full ${bg} opacity-20 blur-2xl transition-transform group-hover:scale-150`}
-                    />
+                      key={key}
+                      className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/4 p-4 shadow-sm backdrop-blur-md transition-all hover:shadow-md hover:scale-[1.02]"
+                    >
+                      <div
+                        className={`absolute -right-4 -top-4 h-24 w-24 rounded-full ${bg} opacity-20 blur-2xl transition-transform group-hover:scale-150`}
+                      />
 
-                    <div className="relative flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                          {label}
-                        </p>
-                        <div className="flex items-baseline gap-2 mt-1">
-                          <p
-                            className={`text-3xl font-bold tracking-tight ${color}`}
-                          >
-                            {statValues[key as keyof typeof statValues]}
+                      <div className="relative flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                            {label}
                           </p>
-                          <span className="text-[10px] font-medium text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded ml-1">
-                            Live
-                          </span>
+                          <div className="flex items-baseline gap-2 mt-1">
+                            <p
+                              className={`text-3xl font-bold tracking-tight ${color}`}
+                            >
+                              {statValues[key as keyof typeof statValues]}
+                            </p>
+                            <span className="text-[10px] font-medium text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded ml-1">
+                              Live
+                            </span>
+                          </div>
+                        </div>
+
+                        <div
+                          className={`flex h-12 w-12 items-center justify-center rounded-xl ${bg} ${border} border shadow-inner transition-transform group-hover:rotate-12`}
+                        >
+                          <Icon
+                            className={`h-6 w-6 ${color}`}
+                            strokeWidth={1.5}
+                          />
                         </div>
                       </div>
 
+                      <div className="mt-4 flex items-center gap-1.5">
+                        <div className="h-1 w-full bg-muted/30 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full ${color.replace("text-", "bg-")} transition-all duration-1000 ease-out`}
+                            style={{
+                              width: `${(statValues[key as keyof typeof statValues] / (statValues.total || 1)) * 100}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+          </div>
+        )}
+
+        {/* Dynamic Content */}
+        <div className={view === "chart" ? "mt-0" : ""}>
+          {view === "table" ? (
+            <Card className="border-border">
+              <CardContent className="p-4 sm:p-5">
+                {loading && users.length === 0 ? (
+                  <div className="space-y-3">
+                    {Array.from({ length: 6 }).map((_, i) => (
                       <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl ${bg} ${border} border shadow-inner transition-transform group-hover:rotate-12`}
-                      >
-                        <Icon
-                          className={`h-6 w-6 ${color}`}
-                          strokeWidth={1.5}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-1.5">
-                      <div className="h-1 w-full bg-muted/30 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${color.replace("text-", "bg-")} transition-all duration-1000 ease-out`}
-                          style={{
-                            width: `${(statValues[key as keyof typeof statValues] / (statValues.total || 1)) * 100}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
+                        key={i}
+                        className="h-10 bg-muted/30 rounded-md animate-pulse"
+                      />
+                    ))}
                   </div>
-                ),
-              )}
-        </div>
-
-        {/* Table Card */}
-        <Card className="border-border">
-          <CardContent className="p-4 sm:p-5">
-            {loading && users.length === 0 ? (
-              <div className="space-y-3">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-10 bg-muted/30 rounded-md animate-pulse"
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    data={users}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                    onEdit={triggerEdit}
+                    onDelete={triggerDelete}
                   />
-                ))}
-              </div>
-            ) : (
-              <DataTable
-                columns={columns}
-                data={users}
-                globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
-                onEdit={triggerEdit}
-                onDelete={triggerDelete}
-              />
-            )}
-          </CardContent>
-        </Card>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <OrganisationChart />
+          )}
+        </div>
       </div>
 
       <CreateUserDialog
