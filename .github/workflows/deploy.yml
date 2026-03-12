@@ -1,14 +1,17 @@
-name: 🚀 Full-Stack Deploy to cPanel
+name: 🚀 Full-Stack Deploy to cPanel (Node.js/Next.js)
 
 on:
   push:
-    branches: [main, dev, stage]
+    branches:
+      - main
+      - stage
+      - dev
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
@@ -30,13 +33,14 @@ jobs:
       - name: 🏗️ Build Project
         run: pnpm run build
 
-      - name: 📂 Deploy via FTP
+      # --- DEPLOY TO PRODUCTION (Main Branch) ---
+      - name: 🌐 Deploy Prod
+        if: github.ref == 'refs/heads/main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME_PROD }} # Use branch logic here like before
+          username: ${{ secrets.FTP_USERNAME_PROD }}
           password: ${{ secrets.FTP_PASSWORD_PROD }}
-          # We upload the source AND the built .next folder
           local-dir: ./
           server-dir: ./
           exclude: |
@@ -44,10 +48,39 @@ jobs:
             **/node_modules/**
             .github/**
 
-      # THIS STEP IS THE "VERCEL MAGIC" - It tells cPanel to refresh
-      - name: 🔄 Restart Node.js App
+      # --- DEPLOY TO STAGING (Stage Branch) ---
+      - name: 🧪 Deploy Stage
+        if: github.ref == 'refs/heads/stage'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_STAGE }}
+          password: ${{ secrets.FTP_PASSWORD_STAGE }}
+          local-dir: ./
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            .github/**
+
+      # --- DEPLOY TO DEV (Dev Branch) ---
+      - name: 🏗️ Deploy Dev
+        if: github.ref == 'refs/heads/dev'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_DEV }}
+          password: ${{ secrets.FTP_PASSWORD_DEV }}
+          local-dir: ./
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            .github/**
+
+      # --- TRIGGER RESTART (Universal) ---
+      # This creates a restart.txt file which cPanel watches to reboot the app
+      - name: 🔄 Signal Server Restart
         run: |
-          echo "Restarting app..."
-          # This creates a restart file that Passenger looks for
-          # You might need a specific SSH command or a cPanel API call here 
-          # depending on your host's restrictions.
+          mkdir -p tmp
+          touch tmp/restart.txt
