@@ -19,7 +19,6 @@ export const useLogout = () => {
       router.refresh();
     } catch (error: any) {
       toast.error("Failed to logout");
-      console.error(error);
     }
   };
 

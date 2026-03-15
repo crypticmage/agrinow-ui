@@ -11,7 +11,6 @@ export async function getServerUsers(): Promise<User[]> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
 
-  console.log(`[getServerUsers] Fetching from: ${BACKEND_URL}/users, Token present: ${!!token}`);
 
   try {
     const headers: Record<string, string> = {
@@ -26,15 +25,10 @@ export async function getServerUsers(): Promise<User[]> {
       next: { revalidate: 0 }, 
     });
 
-    if (!res.ok) {
-      console.error(`getServerUsers error: ${res.status} ${res.statusText}`);
-      return [];
-    }
 
     const data = await res.json();
     return Array.isArray(data) ? data : (data.data ?? []);
   } catch (error) {
-    console.error("Failed to fetch users on server:", error);
     return [];
   }
 }
@@ -46,7 +40,6 @@ export async function getServerOrgChart() {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
 
-  console.log(`[getServerOrgChart] Fetching from: ${BACKEND_URL}/users/org/chart, Token present: ${!!token}`);
 
   try {
     const headers: Record<string, string> = {
@@ -61,15 +54,9 @@ export async function getServerOrgChart() {
       next: { revalidate: 0 },
     });
 
-    if (!res.ok) {
-      console.error(`getServerOrgChart error: ${res.status} ${res.statusText}`);
-      // Log headers to see if something is missing (don't log the actual token value for security)
-      return null;
-    }
 
     return await res.json();
   } catch (error) {
-    console.error("Failed to fetch org chart on server:", error);
     return null;
   }
 }

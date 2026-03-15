@@ -52,7 +52,7 @@ function OrgNode({ node, depth = 0 }: OrgNodeProps) {
       {/* Vertical connector from parent */}
       {depth > 0 && (
         <div
-          className="w-px bg-slate-300 dark:bg-slate-600"
+          className="w-0.5 bg-slate-300 dark:bg-slate-500"
           style={{ height: 28 }}
         />
       )}
@@ -69,7 +69,7 @@ function OrgNode({ node, depth = 0 }: OrgNodeProps) {
         <div
           className="rounded-2xl overflow-hidden cursor-pointer select-none
             bg-white dark:bg-slate-800
-            border border-slate-200 dark:border-slate-700"
+            border-2 border-slate-300 dark:border-slate-600 shadow-sm"
           style={{
             boxShadow: cardShadow,
             transform: hovered ? "translateY(-2px)" : "translateY(0)",
@@ -176,7 +176,7 @@ function OrgNode({ node, depth = 0 }: OrgNodeProps) {
         <div className="flex flex-col items-center">
           {/* Stem from toggle button down to horizontal bar */}
           <div
-            className="w-px bg-slate-300 dark:bg-slate-600"
+            className="w-0.5 bg-slate-300 dark:bg-slate-500"
             style={{ height: 20 }}
           />
           <SubtreeRow nodes={node.subordinates} depth={depth + 1} />
@@ -336,7 +336,7 @@ export default function OrganisationChart() {
   const totalMembers = orgData ? 1 + countDescendants(orgData) : 0;
 
   return (
-    <div className="h-[calc(100vh-180px)] min-h-125 flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+    <div className="h-[calc(100vh-180px)] min-h-125 flex flex-col bg-white dark:bg-slate-950 transition-colors duration-300 rounded-xl overflow-hidden border-2 border-slate-300/80 dark:border-slate-800 shadow-lg">
       {/* Header */}
       <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between shadow-sm shrink-0">
         <div>
@@ -427,15 +427,20 @@ export default function OrganisationChart() {
         onTouchEnd={onMouseUp}
         onWheel={onWheel}
       >
-        {/* Dot grid */}
+        {/* Background effects */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-100"
           style={{
             backgroundImage:
-              "radial-gradient(circle, rgba(148,163,184,0.35) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
+              "radial-gradient(circle at 2px 2px, rgba(148,163,184,0.4) 1px, transparent 0)",
+            backgroundSize: "32px 32px",
           }}
         />
+        <div
+          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/50 to-white/0 dark:from-transparent dark:to-transparent"
+        />
+        {/* Subtle radial glow in light mode */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.03),transparent_70%)] dark:hidden" />
 
         {/* Chart */}
         <div
