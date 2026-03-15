@@ -52,14 +52,11 @@ export const useLogin = () => {
             exp = payload.exp;
           }
         } catch (e) {
-          console.error("Failed to parse token client-side", e);
         }
       }
 
       if (username && role) {
         loginStore.login(username, email, role, exp);
-      } else {
-        console.warn("Missing user data:", data);
       }
 
       // Navigate to dashboard with a flag so it can show its own entry animation.
@@ -67,7 +64,6 @@ export const useLogin = () => {
       router.refresh(); // re-run server-side checks
     },
     onError: (error: any) => {
-      console.error("Login error:", error);
       toast.error(error.response?.data?.error || "Failed to login");
     },
   });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
@@ -153,9 +154,6 @@ export function UserManagementClient() {
                             >
                               {statValues[key as keyof typeof statValues]}
                             </p>
-                            <span className="text-[10px] font-medium text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded ml-1">
-                              Live
-                            </span>
                           </div>
                         </div>
 
@@ -187,33 +185,51 @@ export function UserManagementClient() {
 
         {/* Dynamic Content */}
         <div className={view === "chart" ? "mt-0" : ""}>
-          {view === "table" ? (
-            <Card className="border-border">
-              <CardContent className="p-4 sm:p-5">
-                {loading && users.length === 0 ? (
-                  <div className="space-y-3">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-10 bg-muted/30 rounded-md animate-pulse"
+          <AnimatePresence mode="wait">
+            {view === "table" ? (
+              <motion.div
+                key="table"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <Card className="border-border">
+                  <CardContent className="p-4 sm:p-5">
+                    {loading && users.length === 0 ? (
+                      <div className="space-y-3">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="h-10 bg-muted/30 rounded-md animate-pulse"
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <DataTable
+                        columns={columns}
+                        data={users}
+                        globalFilter={globalFilter}
+                        setGlobalFilter={setGlobalFilter}
+                        onEdit={triggerEdit}
+                        onDelete={triggerDelete}
                       />
-                    ))}
-                  </div>
-                ) : (
-                  <DataTable
-                    columns={columns}
-                    data={users}
-                    globalFilter={globalFilter}
-                    setGlobalFilter={setGlobalFilter}
-                    onEdit={triggerEdit}
-                    onDelete={triggerDelete}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          ) : (
-            <OrganisationChart />
-          )}
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="chart"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+              >
+                <OrganisationChart />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
