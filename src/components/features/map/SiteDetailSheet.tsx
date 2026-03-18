@@ -119,7 +119,7 @@ export function SiteDetailSheet({ site, open, onOpenChange, onAssignUser, canMan
           </div>
 
           <Button
-            className="w-full bg-amber-600 hover:bg-amber-500 text-white"
+            className="w-full"
             onClick={() => {
               router.push(`/field-visits?site=${site.id}`)
               onOpenChange(false)

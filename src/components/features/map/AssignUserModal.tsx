@@ -78,7 +78,7 @@ export function AssignUserModal({ siteId, open, onOpenChange }: AssignUserModalP
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit" disabled={assignUser.isPending} className="bg-amber-600 hover:bg-amber-500 text-white">
+            <Button type="submit" disabled={assignUser.isPending}>
               {assignUser.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Assign'}
             </Button>
           </div>

@@ -109,7 +109,7 @@ export function CreateSiteModal({ open, onOpenChange }: CreateSiteModalProps) {
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit" disabled={createSite.isPending} className="bg-amber-600 hover:bg-amber-500 text-white">
+            <Button type="submit" disabled={createSite.isPending}>
               {createSite.isPending ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" />Creating...</> : 'Create Site'}
             </Button>
           </div>
