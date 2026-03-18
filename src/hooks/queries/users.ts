@@ -45,6 +45,17 @@ export const useUsers = () =>
     staleTime: 30_000,
   });
 
+// FastAPI returns detail as either a string or an array of validation error objects.
+// Always produce a plain string for toast.
+function apiError(err: any, fallback: string): string {
+  const detail = err?.response?.data?.detail;
+  if (!detail) return fallback;
+  if (Array.isArray(detail)) {
+    return detail.map((e: any) => e.msg ?? String(e)).join('; ');
+  }
+  return String(detail);
+}
+
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -54,7 +65,7 @@ export const useCreateUser = () => {
       toast.success("User created successfully");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.detail || "Failed to create user");
+      toast.error(apiError(err, "Failed to create user"));
     },
   });
 };
@@ -68,7 +79,7 @@ export const useUpdateUser = () => {
       toast.success("User updated successfully");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.detail || "Failed to update user");
+      toast.error(apiError(err, "Failed to update user"));
     },
   });
 };
@@ -82,7 +93,7 @@ export const useDeleteUser = () => {
       toast.success("User deleted successfully");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.detail || "Failed to delete user");
+      toast.error(apiError(err, "Failed to delete user"));
     },
   });
 };

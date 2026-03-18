@@ -44,9 +44,10 @@ export function EditUserDialog({ isOpen, setOpen, selectedUser, onSave, isLoadin
   const handleInput = (field: keyof Users, value: any) => {
     let newData = { ...formData, [field]: value };
     if (field === "relive_date" && value) {
-      const selected = new Date(value);
+      // Parse YYYY-MM-DD as local date to avoid UTC off-by-one
+      const [y, m, d] = (value as string).split('-').map(Number);
+      const selected = new Date(y, m - 1, d);
       const today = new Date();
-      selected.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
       if (selected <= today) newData.is_active = false;
     }
@@ -175,7 +176,7 @@ export function EditUserDialog({ isOpen, setOpen, selectedUser, onSave, isLoadin
               type="date"
               value={formData.relive_date ? formData.relive_date.substring(0, 10) : ""}
               onChange={(e) =>
-                handleInput("relive_date", e.target.value ? e.target.value + "T00:00:00.000Z" : undefined)
+                handleInput("relive_date", e.target.value ? e.target.value : undefined)
               }
               className={selectCls}
             />
