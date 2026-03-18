@@ -38,7 +38,7 @@ export function TableSkeleton({
   rows = 5,
   cols = 5,
 }: {
-  title: string;
+  title?: string;
   rows?: number;
   cols?: number;
 }) {
@@ -68,6 +68,51 @@ export function TableSkeleton({
       </CardContent>
     </Card>
   );
+}
+
+export function ChatSkeleton({ messages = 5 }: { messages?: number }) {
+  return (
+    <div className="space-y-4 p-4">
+      {Array.from({ length: messages }).map((_, i) => (
+        <div key={i} className={`flex gap-2 ${i % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
+          <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+          <div className="space-y-1 max-w-xs">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className={`h-12 rounded-2xl ${i % 2 === 0 ? 'w-56' : 'w-44'}`} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function MapSkeleton() {
+  return (
+    <div className="relative w-full h-full min-h-96 rounded-lg overflow-hidden bg-muted animate-pulse">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-muted-foreground/50 flex flex-col items-center gap-2">
+          <div className="w-12 h-12 rounded-full border-4 border-muted-foreground/20 flex items-center justify-center">
+            <div className="w-1 h-5 bg-muted-foreground/20 rounded" />
+          </div>
+          <Skeleton className="h-3 w-24" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function FormSkeleton({ fields = 4 }: { fields?: number }) {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: fields }).map((_, i) => (
+        <div key={i} className="space-y-1.5">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-9 w-full" />
+        </div>
+      ))}
+      <Skeleton className="h-9 w-28 mt-2" />
+    </div>
+  )
 }
 
 export function UserRowSkeleton() {

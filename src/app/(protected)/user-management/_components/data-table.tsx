@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   onEdit: (data: TData) => void;
   onDelete: (data: TData) => void;
+  onAssignSite: (data: TData) => void;
   globalFilter: string;
   setGlobalFilter: (val: string) => void;
 }
@@ -50,6 +51,7 @@ export function DataTable<TData, TValue>({
   data,
   onEdit,
   onDelete,
+  onAssignSite,
   globalFilter,
   setGlobalFilter,
 }: DataTableProps<TData, TValue>) {
@@ -69,7 +71,7 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
     state: { sorting, rowSelection, globalFilter, columnFilters },
-    meta: { onEdit, onDelete },
+    meta: { onEdit, onDelete, onAssignSite },
     initialState: { pagination: { pageSize: 10 } },
   });
 

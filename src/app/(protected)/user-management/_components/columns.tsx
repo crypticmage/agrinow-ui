@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { User } from "@/types/user";
 import { formatUserName, formatUsername } from "@/types/user";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Edit, Trash2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -240,6 +240,7 @@ export const columns: ColumnDef<User>[] = [
       const meta = table.options.meta as {
         onEdit: (user: User) => void;
         onDelete: (user: User) => void;
+        onAssignSite: (user: User) => void;
       };
 
       return (
@@ -260,6 +261,13 @@ export const columns: ColumnDef<User>[] = [
               >
                 <Edit className="h-3.5 w-3.5 text-blue-500" />
                 Edit User
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => meta?.onAssignSite(user)}
+                className="cursor-pointer gap-2 text-sm"
+              >
+                <MapPin className="h-3.5 w-3.5 text-emerald-500" />
+                Assign Sites
               </DropdownMenuItem>
               <DropdownMenuItem
                 variant="destructive"

@@ -33,7 +33,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} antialiased`}
     >
-      <body className="font-sans">
+      <body className="font-sans" suppressHydrationWarning>
         <QueryProvider>
           <ThemeProvider
             attribute="class"

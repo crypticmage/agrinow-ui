@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Sprout, LogIn, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLogin } from "@/hooks/queries/useAuth";
 import { Input } from "@/components/ui/input";
@@ -140,6 +141,11 @@ export default function LoginForm() {
             {isPending ? "Signing In..." : "Sign In"}
           </span>
         </Button>
+        <div className="text-center text-sm">
+          <Link href="/forgot-password" className="text-green-400 hover:text-green-300 transition-colors">
+            Forgot password?
+          </Link>
+        </div>
       </form>
     </div>
   );

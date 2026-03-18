@@ -1,4 +1,4 @@
-import axiosInstance from "@/lib/axiosInstance";
+import api from "@/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { User } from "@/types/user";
@@ -10,7 +10,7 @@ export const getAllUsersApi = async (token?: string): Promise<User[]> => {
   const config = token
     ? { headers: { Authorization: `Bearer ${token}` } }
     : {};
-  const response = await axiosInstance.get("/users", config);
+  const response = await api.get("/users/", config);
   // Handle both { data: [] } and plain array responses
   return Array.isArray(response.data)
     ? response.data
@@ -18,7 +18,7 @@ export const getAllUsersApi = async (token?: string): Promise<User[]> => {
 };
 
 export const createUserApi = async (payload: Partial<User>): Promise<User> => {
-  const response = await axiosInstance.post("/create_user/", payload);
+  const response = await api.post("/create_user/", payload);
   return response.data;
 };
 
@@ -29,12 +29,12 @@ export const updateUserApi = async ({
   id: number;
   payload: Partial<User>;
 }): Promise<User> => {
-  const response = await axiosInstance.put(`/users/${id}`, payload);
+  const response = await api.put(`/users/${id}`, payload);
   return response.data;
 };
 
 export const deleteUserApi = async (id: number): Promise<void> => {
-  await axiosInstance.delete(`/users/${id}`);
+  await api.delete(`/users/${id}`);
 };
 
 //Hooks
@@ -86,3 +86,17 @@ export const useDeleteUser = () => {
     },
   });
 };
+
+export function useManagerDropdown(enabled = true) {
+  return useQuery({
+    queryKey: ['users', 'manager-dropdown'],
+    queryFn: async () => {
+      const { data } = await api.get<{ id: number; username: string; first_name: string; last_name: string }[]>(
+        '/users/manager_dropdown'
+      )
+      return data
+    },
+    enabled,
+    staleTime: 5 * 60_000, // cache 5 minutes — managers list rarely changes
+  })
+}

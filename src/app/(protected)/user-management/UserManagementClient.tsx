@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,17 +16,28 @@ import { DataTable } from "./_components/data-table";
 import { CreateUserDialog } from "./_components/create-user-dialog";
 import { EditUserDialog } from "./_components/edit-user-dialog";
 import { DeleteUserDialog } from "./_components/delete-user-dialog";
+import { AssignSiteDialog } from "./_components/assign-site-dialog";
 import {
   useUsers,
   useCreateUser,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks/queries/users";
+import { useAppStore } from "@/stores/appStore";
 import { statCardsConfig } from "@/data/user-management";
 import { LayoutGrid, List } from "lucide-react";
 import OrganisationChart from "./_components/organisation-chart";
 
 export function UserManagementClient() {
+  const { currentUser } = useAppStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (currentUser && currentUser.role !== 'admin') {
+      router.replace('/dashboard');
+    }
+  }, [currentUser, router]);
+
   // TanStack Query will automatically pick up the dehydrated state from HydrationBoundary
   const { data: users = [] as User[], isLoading: queryLoading } = useUsers();
   const createUser = useCreateUser();
@@ -41,6 +53,7 @@ export function UserManagementClient() {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
+  const [isAssignSiteOpen, setAssignSiteOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const triggerEdit = (u: User) => {
@@ -50,6 +63,10 @@ export function UserManagementClient() {
   const triggerDelete = (u: User) => {
     setSelectedUser(u);
     setDeleteOpen(true);
+  };
+  const triggerAssignSite = (u: User) => {
+    setSelectedUser(u);
+    setAssignSiteOpen(true);
   };
 
   const handleSaveCreate = (userData: Partial<User>) => {
@@ -213,6 +230,7 @@ export function UserManagementClient() {
                         setGlobalFilter={setGlobalFilter}
                         onEdit={triggerEdit}
                         onDelete={triggerDelete}
+                        onAssignSite={triggerAssignSite}
                       />
                     )}
                   </CardContent>
@@ -252,6 +270,11 @@ export function UserManagementClient() {
         selectedUser={selectedUser}
         onDeleteConfirm={performDelete}
         isLoading={deleteUser.isPending}
+      />
+      <AssignSiteDialog
+        isOpen={isAssignSiteOpen}
+        setOpen={setAssignSiteOpen}
+        user={selectedUser}
       />
     </PageTransition>
   );
