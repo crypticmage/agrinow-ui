@@ -348,6 +348,7 @@ const DashboardContent = () => {
 
         {/* Sites summary table */}
         {!loading && sites.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <Card className="border border-border shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -398,6 +399,7 @@ const DashboardContent = () => {
               </div>
             </CardContent>
           </Card>
+          </motion.div>
         )}
 
         {/* Charts — all real data */}
@@ -411,6 +413,7 @@ const DashboardContent = () => {
           ) : (
             <>
               {/* Sites registered per month */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.48 }}>
               <Card className="border border-border shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
@@ -434,8 +437,10 @@ const DashboardContent = () => {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
 
               {/* Team by role */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
               <Card className="border border-border shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
@@ -459,9 +464,11 @@ const DashboardContent = () => {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
 
               {/* My weekly check-ins — full width */}
-              <Card className="lg:col-span-2 border border-border shadow-sm">
+              <motion.div className="lg:col-span-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.62 }}>
+              <Card className="w-full border border-border shadow-sm">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
                     <LineChartIcon className="h-4 w-4 text-primary" />
@@ -485,6 +492,7 @@ const DashboardContent = () => {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
             </>
           )}
         </div>
