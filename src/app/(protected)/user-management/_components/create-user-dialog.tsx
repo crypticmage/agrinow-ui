@@ -16,6 +16,7 @@ import { FormField, SectionTitle } from "./user-form-elements";
 import { Users } from "@/types/user";
 import { languageOptions, employmentTypeOptions } from "@/data/user-management";
 import { useManagerDropdown } from "@/hooks/queries/users";
+import { toast } from "sonner";
 
 const roleOptionsLowercase = ["admin", "manager", "farmer", "agent", "analyst"];
 
@@ -47,8 +48,14 @@ export function CreateUserDialog({ isOpen, setOpen, onSave, isLoading }: CreateU
   };
 
   const handleSave = () => {
+    const fd = formData as any;
+    if (!fd.first_name?.trim()) { toast.error("First name is required"); return; }
+    if (!fd.last_name?.trim()) { toast.error("Last name is required"); return; }
+    if (!fd.username?.trim()) { toast.error("Username is required"); return; }
+    if (!fd.email?.trim()) { toast.error("Email is required"); return; }
+    if (!fd.password?.trim()) { toast.error("Password is required"); return; }
+    if (!fd.hire_date) { toast.error("Hire date is required"); return; }
     onSave(formData);
-    setOpen(false);
   };
 
   return (
@@ -201,7 +208,7 @@ export function CreateUserDialog({ isOpen, setOpen, onSave, isLoading }: CreateU
                 type="date"
                 value={formData.hire_date ? formData.hire_date.substring(0, 10) : ""}
                 onChange={(e) =>
-                  handleInput("hire_date", e.target.value ? e.target.value + "T00:00:00.000Z" : undefined)
+                  handleInput("hire_date", e.target.value ? e.target.value : undefined)
                 }
                 className={selectCls}
               />
@@ -211,7 +218,7 @@ export function CreateUserDialog({ isOpen, setOpen, onSave, isLoading }: CreateU
                 type="date"
                 value={formData.relive_date ? formData.relive_date.substring(0, 10) : ""}
                 onChange={(e) =>
-                  handleInput("relive_date", e.target.value ? e.target.value + "T00:00:00.000Z" : undefined)
+                  handleInput("relive_date", e.target.value ? e.target.value : undefined)
                 }
                 className={selectCls}
               />
