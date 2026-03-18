@@ -11,7 +11,12 @@ interface LoginCredentials {
   password: string
 }
 
-export function useLogin() {
+interface UseLoginOptions {
+  /** Override post-auth navigation. Called instead of router.push('/dashboard'). */
+  onNavigate?: () => void
+}
+
+export function useLogin(options?: UseLoginOptions) {
   const router = useRouter()
   const { login } = useAppStore()
 
@@ -27,8 +32,12 @@ export function useLogin() {
       // Also persist in a JS cookie so Next.js server components can read it
       // for SSR prefetch (same security level as localStorage).
       document.cookie = `auth-token=${data.access_token}; path=/; SameSite=Strict; max-age=28800`
-      router.push('/dashboard')
-      router.refresh()
+      if (options?.onNavigate) {
+        options.onNavigate()
+      } else {
+        router.push('/dashboard')
+        router.refresh()
+      }
     },
     onError: (error: any) => {
       const message =

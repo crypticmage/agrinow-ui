@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { format, parseISO, differenceInMinutes } from 'date-fns'
 import { MapPin, Clock, LogIn, LogOut, Loader2, CheckCircle2, AlertCircle, Wind, Droplets, ThermometerSun, ShieldCheck, ShieldX, ShieldOff } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
@@ -49,6 +50,8 @@ export default function AttendancePage() {
   const checkOut = useCheckOut()
   const [notes, setNotes] = useState('')
   const [mapModal, setMapModal] = useState<{ lat: number; lng: number; label?: string } | null>(null)
+  // Brief "stamp" flash after a successful check-in
+  const [punchFlash, setPunchFlash] = useState(false)
 
   const handleCheckIn = async () => {
     try {
@@ -58,6 +61,8 @@ export default function AttendancePage() {
         notes: notes.trim() || undefined,
       })
       setNotes('')
+      setPunchFlash(true)
+      setTimeout(() => setPunchFlash(false), 900)
       toast.success('Checked in successfully!')
     } catch (e: any) {
       toast.error(e?.response?.data?.detail ?? 'Check-in failed.')
@@ -148,14 +153,42 @@ export default function AttendancePage() {
 
             {/* Action buttons */}
             {!hasCheckedIn && (
-              <Button
+              <motion.button
                 onClick={handleCheckIn}
                 disabled={checkIn.isPending}
-                className="w-full"
+                /* Tactile "stamp" sequence: compress → expand → settle */
+                whileTap={{ scale: 0.94 }}
+                animate={
+                  punchFlash
+                    ? { scale: [1, 1.07, 0.98, 1], transition: { duration: 0.45, times: [0, 0.3, 0.7, 1] } }
+                    : { scale: 1 }
+                }
+                className="relative w-full overflow-hidden h-10 rounded-md bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
-                {checkIn.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <LogIn className="h-4 w-4 mr-2" />}
-                Check In
-              </Button>
+                {/* Ripple fill on punch */}
+                <AnimatePresence>
+                  {punchFlash && (
+                    <motion.span
+                      key="ripple"
+                      initial={{ scale: 0, opacity: 0.5 }}
+                      animate={{ scale: 3.5, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.6, ease: 'easeOut' }}
+                      className="pointer-events-none absolute inset-0 m-auto h-full aspect-square rounded-full bg-white"
+                      aria-hidden="true"
+                    />
+                  )}
+                </AnimatePresence>
+                <span className="relative flex items-center gap-2">
+                  {checkIn.isPending
+                    ? <Loader2 className="h-4 w-4 animate-spin" />
+                    : punchFlash
+                    ? <CheckCircle2 className="h-4 w-4" />
+                    : <LogIn className="h-4 w-4" />
+                  }
+                  {checkIn.isPending ? 'Checking In…' : punchFlash ? 'Checked In!' : 'Check In'}
+                </span>
+              </motion.button>
             )}
             {isWorking && (
               <Button
