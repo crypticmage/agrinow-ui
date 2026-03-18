@@ -5,7 +5,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s1",
     name: "Suresh Patel",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43210",
     status: "active",
     attendance: 22,
@@ -14,7 +14,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s2",
     name: "Anita Sharma",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43211",
     status: "active",
     attendance: 20,
@@ -23,7 +23,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s3",
     name: "Vikram Singh",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43212",
     status: "on-leave",
     attendance: 15,
@@ -32,7 +32,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s4",
     name: "Meena Devi",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43213",
     status: "active",
     attendance: 24,
@@ -233,3 +233,12 @@ export const notifications = [
     read: true,
   },
 ];
+
+// TODO: replace with API coords when available (API does not yet return GPS coordinates)
+export const SITE_COORDS: Record<number, { lat: number; lng: number }> = {
+  1: { lat: 12.9716, lng: 77.5946 }, // Bangalore area
+  2: { lat: 13.0827, lng: 80.2707 }, // Chennai area
+  3: { lat: 17.3850, lng: 78.4867 }, // Hyderabad area
+  4: { lat: 18.5204, lng: 73.8567 }, // Pune area
+  5: { lat: 15.3173, lng: 75.7139 }, // Hubli area
+};

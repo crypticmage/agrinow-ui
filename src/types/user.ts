@@ -1,5 +1,5 @@
 // Core User entity — used across the whole application
-export type UserRole = "Admin" | "Manager" | "Farmer" | "Agent" | "Analyst";
+export type UserRole = 'admin' | 'manager' | 'farmer' | 'agent' | 'analyst';
 
 export type EmployeeType = "Full time" | "Part time" | "Contract" | "Intern";
 

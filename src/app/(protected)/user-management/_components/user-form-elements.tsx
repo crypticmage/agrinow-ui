@@ -57,7 +57,7 @@ export function DatePickerField({
         <CalendarIcon className="mr-2 h-4 w-4 opacity-50 shrink-0" />
         {value ? format(new Date(value), "PPP") : <span>{placeholder}</span>}
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0 z-[9999]" align="start">
         <Calendar
           mode="single"
           selected={value ? new Date(value) : undefined}

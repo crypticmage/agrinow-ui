@@ -235,7 +235,7 @@ export function TopNav() {
           </div>
           <div className="hidden md:flex flex-col items-start gap-0.5">
             <p className="text-xs font-semibold leading-none text-foreground">
-              {formatUsername(user?.userName || "")}
+              {formatUsername(user?.username || "")}
             </p>
             <p className="text-[10px] text-muted-foreground capitalize leading-none font-normal">
               {user?.role}

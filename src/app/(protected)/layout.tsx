@@ -1,18 +1,29 @@
-"use client";
+'use client'
+import { useBootstrapSession } from '@/hooks/useBootstrapSession'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { Loader2 } from 'lucide-react'
+import { AppLayout } from '@/components/layout/AppLayout'
 
-import { AppLayout } from "@/components/layout/AppLayout";
-import { useAuthCheck } from "@/hooks/useAuthCheck";
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const { isReady, isAuthenticated } = useBootstrapSession()
+  const router = useRouter()
 
-export default function ProtectedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const isAuthenticated = useAuthCheck();
+  useEffect(() => {
+    if (isReady && !isAuthenticated) {
+      router.replace('/login')
+    }
+  }, [isReady, isAuthenticated, router])
 
-  if (!isAuthenticated) {
-    return null; // Prevent hydration flash while redirecting
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
-  return <AppLayout>{children}</AppLayout>;
+  if (!isAuthenticated) return null
+
+  return <AppLayout>{children}</AppLayout>
 }

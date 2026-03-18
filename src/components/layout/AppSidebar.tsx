@@ -19,10 +19,7 @@ import { routes } from "@/data/sidebarRoutes";
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const role = (useAppStore((s) => s.currentUser?.role) ?? "staff") as
-    | "admin"
-    | "manager"
-    | "staff";
+  const role = useAppStore((s) => s.currentUser?.role) ?? ""
   const isMobile = useIsMobile();
   const { state, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";

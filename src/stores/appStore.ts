@@ -1,18 +1,23 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { AuthUser, AuthRole } from "@/types/auth";
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export interface StoreUser extends AuthUser {}
+interface StoreUser {
+  username: string
+  email: string
+  role: 'admin' | 'manager' | 'farmer' | 'agent' | 'analyst'
+}
 
 interface AppState {
-  currentUser: StoreUser | null;
-  isAuthenticated: boolean;
-  sidebarOpen: boolean;
-  login: (userName: string, email: string, role: AuthRole, exp?: number) => void;
-  logout: () => void;
-  setRole: (role: AuthRole) => void;
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
+  currentUser: StoreUser | null
+  isAuthenticated: boolean
+  sidebarOpen: boolean
+  // In-memory only — never persisted to localStorage
+  accessToken: string | null
+  login: (username: string, email: string, role: string, token?: string) => void
+  logout: () => void
+  setRole: (role: string) => void
+  toggleSidebar: () => void
+  setSidebarOpen: (open: boolean) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -21,21 +26,35 @@ export const useAppStore = create<AppState>()(
       currentUser: null,
       isAuthenticated: false,
       sidebarOpen: true,
-      login: (userName, email, role, exp) =>
+      accessToken: null,
+      login: (username, email, role, token) =>
         set({
-          currentUser: { id: "1", userName, email, role, exp: exp || null },
+          currentUser: { username, email, role: role as StoreUser['role'] },
           isAuthenticated: true,
+          accessToken: token ?? null,
         }),
-      logout: () => set({ currentUser: null, isAuthenticated: false }),
+      logout: () => {
+        if (typeof document !== 'undefined') {
+          document.cookie = 'auth-token=; path=/; max-age=0'
+        }
+        set({ currentUser: null, isAuthenticated: false, accessToken: null })
+      },
       setRole: (role) =>
         set((state) => ({
-          currentUser: state.currentUser ? { ...state.currentUser, role } : null,
+          currentUser: state.currentUser
+            ? { ...state.currentUser, role: role as StoreUser['role'] }
+            : null,
         })),
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
     }),
     {
-      name: "seedsense-storage",
+      name: 'seedsense-user', // localStorage key — stores display info only, NOT the JWT
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        isAuthenticated: state.isAuthenticated,
+        // accessToken intentionally excluded — in-memory only
+      }),
     }
   )
-);
+)
