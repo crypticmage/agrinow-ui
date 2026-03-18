@@ -97,13 +97,13 @@ export default function AttendancePage() {
               hasCheckedOut
                 ? 'bg-muted/50 border border-border'
                 : isWorking
-                ? 'bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800'
+                ? 'bg-success/10 border border-success/25'
                 : 'bg-muted/30 border border-dashed border-border'
             }`}>
               {hasCheckedOut ? (
                 <CheckCircle2 className="h-5 w-5 text-muted-foreground shrink-0" />
               ) : isWorking ? (
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0 ml-1" />
+                <div className="w-2.5 h-2.5 rounded-full bg-success animate-pulse shrink-0 ml-1" />
               ) : (
                 <AlertCircle className="h-5 w-5 text-muted-foreground shrink-0" />
               )}
@@ -151,7 +151,7 @@ export default function AttendancePage() {
               <Button
                 onClick={handleCheckIn}
                 disabled={checkIn.isPending}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="w-full"
               >
                 {checkIn.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <LogIn className="h-4 w-4 mr-2" />}
                 Check In
@@ -162,7 +162,7 @@ export default function AttendancePage() {
                 onClick={handleCheckOut}
                 disabled={checkOut.isPending}
                 variant="outline"
-                className="w-full border-amber-500 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                className="w-full border-warning text-warning hover:bg-warning/10"
               >
                 {checkOut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <LogOut className="h-4 w-4 mr-2" />}
                 Check Out
@@ -248,13 +248,13 @@ export default function AttendancePage() {
                       <tr key={rec.id} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
                         <td className="py-2.5 font-medium">{rec.username ?? `#${rec.user_id}`}</td>
                         <td className="py-2.5">{rec.check_in ? format(parseISO(rec.check_in), 'HH:mm') : '—'}</td>
-                        <td className="py-2.5">{rec.check_out ? format(parseISO(rec.check_out), 'HH:mm') : (rec.check_in ? <span className="text-emerald-500 text-xs">Working</span> : '—')}</td>
+                        <td className="py-2.5">{rec.check_out ? format(parseISO(rec.check_out), 'HH:mm') : (rec.check_in ? <span className="text-success text-xs">Working</span> : '—')}</td>
                         <td className="py-2.5 text-muted-foreground text-xs">{rec.check_in ? duration(rec.check_in, rec.check_out) : '—'}</td>
                         <td className="py-2.5">
                           {rec.latitude ? (
                             <button
                               onClick={() => setMapModal({ lat: rec.latitude!, lng: rec.longitude!, label: `${rec.username} · ${format(parseISO(rec.date), 'MMM d')}` })}
-                              className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 hover:underline underline-offset-2 font-mono"
+                              className="flex items-center gap-1 text-xs text-success hover:underline underline-offset-2 font-mono"
                             >
                               <MapPin className="h-3 w-3 shrink-0" />
                               {rec.latitude.toFixed(4)}, {rec.longitude?.toFixed(4)}
@@ -263,19 +263,19 @@ export default function AttendancePage() {
                         </td>
                         <td className="py-2.5">
                           {rec.site_compliance === 'compliant' && (
-                            <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
                               <ShieldCheck className="h-3.5 w-3.5" />
                               Compliant {rec.site_distance_km != null ? `(${rec.site_distance_km} km)` : ''}
                             </span>
                           )}
                           {rec.site_compliance === 'non_compliant' && (
-                            <span className="inline-flex items-center gap-1 text-xs font-medium text-rose-600 dark:text-rose-400">
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-destructive">
                               <ShieldX className="h-3.5 w-3.5" />
                               Far from site {rec.site_distance_km != null ? `(${rec.site_distance_km} km)` : ''}
                             </span>
                           )}
                           {rec.site_compliance === 'no_location' && (
-                            <span className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                            <span className="inline-flex items-center gap-1 text-xs text-warning">
                               <ShieldOff className="h-3.5 w-3.5" />
                               No GPS
                             </span>

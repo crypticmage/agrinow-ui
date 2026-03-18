@@ -96,10 +96,10 @@ export default function TimesheetPage() {
       {!isLoading && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Team Members', value: totalTeam, icon: Users, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-            { label: 'Days with Records', value: totalPresent, icon: CalendarDays, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
-            { label: 'Total Check-Ins', value: records.length, icon: LogIn, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-50 dark:bg-violet-900/20' },
-            { label: 'Avg Shift Length', value: avgDuration ?? '—', icon: Clock, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+            { label: 'Team Members', value: totalTeam, icon: Users, color: 'text-info', bg: 'bg-info/10' },
+            { label: 'Days with Records', value: totalPresent, icon: CalendarDays, color: 'text-success', bg: 'bg-success/10' },
+            { label: 'Total Check-Ins', value: records.length, icon: LogIn, color: 'text-role-admin-foreground', bg: 'bg-role-admin' },
+            { label: 'Avg Shift Length', value: avgDuration ?? '—', icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
           ].map(stat => (
             <Card key={stat.label} className="border border-border shadow-sm">
               <CardContent className="px-4 py-3 flex items-center gap-3">
@@ -173,15 +173,17 @@ export default function TimesheetPage() {
                   const bgClass = !hasData
                     ? ''
                     : rate >= 0.8
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
+                    ? 'bg-success/10 border-success/30'
                     : rate >= 0.5
-                    ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'
-                    : 'bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-800'
+                    ? 'bg-warning/10 border-warning/30'
+                    : 'bg-destructive/10 border-destructive/25'
 
                   return (
                     <button
                       key={dateStr}
                       onClick={() => setSelectedDay(dateStr)}
+                      aria-selected={isSelected}
+                      aria-label={format(day, 'MMMM d, yyyy')}
                       className={`relative min-h-16 rounded-lg border p-1.5 text-left transition-all hover:shadow-sm
                         ${isSelected ? 'ring-2 ring-primary border-primary' : 'border-border'}
                         ${hasData ? bgClass : 'border-transparent hover:border-border'}
@@ -220,9 +222,9 @@ export default function TimesheetPage() {
             {/* Legend */}
             <div className="flex items-center gap-4 mt-3 pt-3 border-t">
               {[
-                { color: 'bg-emerald-200 dark:bg-emerald-800', label: '≥80% present' },
-                { color: 'bg-amber-200 dark:bg-amber-800', label: '50–79%' },
-                { color: 'bg-rose-200 dark:bg-rose-800', label: '<50%' },
+                { color: 'bg-success/40', label: '≥80% present' },
+                { color: 'bg-warning/40', label: '50–79%' },
+                { color: 'bg-destructive/30', label: '<50%' },
               ].map(l => (
                 <div key={l.label} className="flex items-center gap-1.5">
                   <div className={`w-2.5 h-2.5 rounded-sm ${l.color}`} />
@@ -261,15 +263,15 @@ export default function TimesheetPage() {
                         complete
                           ? 'bg-muted/30 border-border'
                           : working
-                          ? 'bg-emerald-50 dark:bg-emerald-900/15 border-emerald-200 dark:border-emerald-800'
+                          ? 'bg-success/10 border-success/25'
                           : 'bg-muted/20 border-border'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">{rec.username ?? `#${rec.user_id}`}</span>
                         {working && (
-                          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="inline-flex items-center gap-1 text-[10px] text-success font-medium">
+                            <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                             Working
                           </span>
                         )}
@@ -282,13 +284,13 @@ export default function TimesheetPage() {
                       <div className="flex items-center gap-3 text-muted-foreground">
                         {rec.check_in && (
                           <span className="flex items-center gap-1">
-                            <LogIn className="h-3 w-3 text-emerald-500" />
+                            <LogIn className="h-3 w-3 text-success" />
                             {format(parseISO(rec.check_in), 'HH:mm')}
                           </span>
                         )}
                         {rec.check_out && (
                           <span className="flex items-center gap-1">
-                            <LogOut className="h-3 w-3 text-amber-500" />
+                            <LogOut className="h-3 w-3 text-warning" />
                             {format(parseISO(rec.check_out), 'HH:mm')}
                           </span>
                         )}
@@ -297,19 +299,19 @@ export default function TimesheetPage() {
                         <p className="text-[10px] text-muted-foreground italic truncate">"{rec.notes}"</p>
                       )}
                       {rec.site_compliance === 'compliant' && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                        <span className="inline-flex items-center gap-1 text-[10px] text-success font-medium">
                           <ShieldCheck className="h-3 w-3" />
                           Near site {rec.site_distance_km != null ? `· ${rec.site_distance_km} km` : ''}
                         </span>
                       )}
                       {rec.site_compliance === 'non_compliant' && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-rose-600 dark:text-rose-400 font-medium">
+                        <span className="inline-flex items-center gap-1 text-[10px] text-destructive font-medium">
                           <ShieldX className="h-3 w-3" />
                           Far from site {rec.site_distance_km != null ? `· ${rec.site_distance_km} km` : ''}
                         </span>
                       )}
                       {rec.site_compliance === 'no_location' && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400">
+                        <span className="inline-flex items-center gap-1 text-[10px] text-warning">
                           <ShieldOff className="h-3 w-3" />
                           No GPS data
                         </span>
