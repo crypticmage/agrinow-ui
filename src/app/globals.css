@@ -52,6 +52,18 @@
   --color-info: hsl(var(--info));
   --color-info-foreground: hsl(var(--info-foreground));
 
+  /* Role tokens */
+  --color-role-admin: hsl(var(--role-admin));
+  --color-role-admin-foreground: hsl(var(--role-admin-foreground));
+  --color-role-manager: hsl(var(--role-manager));
+  --color-role-manager-foreground: hsl(var(--role-manager-foreground));
+  --color-role-farmer: hsl(var(--role-farmer));
+  --color-role-farmer-foreground: hsl(var(--role-farmer-foreground));
+  --color-role-agent: hsl(var(--role-agent));
+  --color-role-agent-foreground: hsl(var(--role-agent-foreground));
+  --color-role-analyst: hsl(var(--role-analyst));
+  --color-role-analyst-foreground: hsl(var(--role-analyst-foreground));
+
   /* Sidebar */
   --color-sidebar: hsl(var(--sidebar-background));
   --color-sidebar-foreground: hsl(var(--sidebar-foreground));
@@ -173,6 +185,18 @@
     --info: 207 90% 54%;
     --info-foreground: 0 0% 100%;
 
+    /* Role tokens — light */
+    --role-admin: 270 60% 93%;
+    --role-admin-foreground: 270 65% 38%;
+    --role-manager: 220 70% 93%;
+    --role-manager-foreground: 220 70% 40%;
+    --role-farmer: 122 40% 90%;
+    --role-farmer-foreground: 122 46% 28%;
+    --role-agent: 36 100% 92%;
+    --role-agent-foreground: 36 80% 32%;
+    --role-analyst: 185 55% 90%;
+    --role-analyst-foreground: 185 65% 28%;
+
     /* Sidebar */
     --sidebar-background: 122 30% 18%;
     --sidebar-foreground: 150 10% 92%;
@@ -219,6 +243,26 @@
     --border: 150 8% 20%;
     --input: 150 8% 20%;
     --ring: 122 40% 45%;
+
+    /* Severity tokens — dark */
+    --warning: 36 90% 58%;
+    --warning-foreground: 36 80% 10%;
+    --success: 122 40% 48%;
+    --success-foreground: 0 0% 100%;
+    --info: 207 80% 62%;
+    --info-foreground: 0 0% 100%;
+
+    /* Role tokens — dark */
+    --role-admin: 270 45% 22%;
+    --role-admin-foreground: 270 70% 78%;
+    --role-manager: 220 55% 22%;
+    --role-manager-foreground: 220 75% 78%;
+    --role-farmer: 122 30% 22%;
+    --role-farmer-foreground: 122 50% 68%;
+    --role-agent: 36 70% 22%;
+    --role-agent-foreground: 36 90% 72%;
+    --role-analyst: 185 45% 20%;
+    --role-analyst-foreground: 185 60% 68%;
 
     --sidebar-background: 150 15% 5%;
     --sidebar-foreground: 150 10% 85%;

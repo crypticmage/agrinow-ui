@@ -49,14 +49,14 @@ interface ActivityNotif {
 }
 
 const NOTIF_META: Record<string, { icon: React.ElementType; color: string; label: string }> = {
-  login:            { icon: LogIn,       color: "text-emerald-500", label: "Login" },
-  logout:           { icon: LogOut,      color: "text-slate-400",   label: "Logout" },
-  password_changed: { icon: Key,         color: "text-amber-500",   label: "Password changed" },
-  user_updated:     { icon: UserCog,     color: "text-blue-500",    label: "User updated" },
-  user_deleted:     { icon: Trash2,      color: "text-rose-500",    label: "User deleted" },
-  failed_login:     { icon: AlertCircle, color: "text-rose-500",    label: "Failed login" },
-  force_logout:     { icon: ShieldOff,   color: "text-purple-500",  label: "Force logout" },
-  user_created:     { icon: UserIcon,     color: "text-emerald-500", label: "User created" },
+  login: { icon: LogIn, color: "text-emerald-500", label: "Login" },
+  logout: { icon: LogOut, color: "text-slate-400", label: "Logout" },
+  password_changed: { icon: Key, color: "text-amber-500", label: "Password changed" },
+  user_updated: { icon: UserCog, color: "text-blue-500", label: "User updated" },
+  user_deleted: { icon: Trash2, color: "text-rose-500", label: "User deleted" },
+  failed_login: { icon: AlertCircle, color: "text-rose-500", label: "Failed login" },
+  force_logout: { icon: ShieldOff, color: "text-purple-500", label: "Force logout" },
+  user_created: { icon: UserIcon, color: "text-emerald-500", label: "User created" },
 };
 
 function wmoIcon(code: number) {

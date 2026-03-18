@@ -84,7 +84,7 @@ export default function LoginForm() {
             placeholder="you@seedsense.farm or username"
             autoComplete="off"
             {...register("identifier")}
-            className="h-11 rounded-xl border-white/8 bg-white/5 px-4 text-sm text-white placeholder-white/20 caret-green-300 focus:border-green-500/60 focus:bg-white/[0.07] focus:ring-0"
+            className="h-11 rounded-xl border-white/8 bg-white/5 px-4 text-sm text-white placeholder-white/20 caret-green-300 focus:border-green-500/60 focus:bg-white/[0.07] focus:ring-1 focus:ring-green-500/50"
           />
           {errors.identifier?.message ? (
             <p className="text-xs text-red-400">
@@ -106,7 +106,7 @@ export default function LoginForm() {
               placeholder="••••••••"
               autoComplete="off"
               {...register("password")}
-              className="h-11 rounded-xl border-white/8 bg-white/5 px-4 pr-11 text-sm text-white placeholder-white/20 caret-green-300 focus:border-green-500/60 focus:bg-white/[0.07] focus:ring-0"
+              className="h-11 rounded-xl border-white/8 bg-white/5 px-4 pr-11 text-sm text-white placeholder-white/20 caret-green-300 focus:border-green-500/60 focus:bg-white/[0.07] focus:ring-1 focus:ring-green-500/50"
             />
             {errors.password?.message ? (
               <p className="mt-1 text-xs text-red-400">
