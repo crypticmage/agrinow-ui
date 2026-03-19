@@ -1,4 +1,4 @@
-name: 🚀 Next.js Vercel-Style Deploy
+name: 🚀 Next.js cPanel Deploy
 on:
   push:
     branches: [main, stage, dev]
@@ -10,7 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code
+      - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
       - name: 🟢 Setup Node.js
@@ -26,22 +26,41 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🏗️ Build Project
+      - name: 🏗️ Build (standalone output)
         run: pnpm run build
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
 
-      - name: 📂 Sync to cPanel
+      - name: 📁 Assemble deploy folder
+        run: |
+          mkdir -p deploy
+
+          # Standalone server entry + package.json
+          cp .next/standalone/server.js  deploy/server.js
+          cp .next/standalone/package.json deploy/package.json
+
+          # Bundled node_modules (only what Next needs at runtime)
+          cp -r .next/standalone/node_modules deploy/node_modules
+
+          # Server chunks (.next/server, etc.)
+          cp -r .next/standalone/.next deploy/.next
+
+          # Static assets — must live at .next/static
+          cp -r .next/static deploy/.next/static
+
+          # Public folder (images, icons, etc.)
+          cp -r public deploy/public
+
+      - name: 📂 Upload to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
-          # This logic picks the right FTP user based on the branch
           username: ${{ github.ref == 'refs/heads/main' && secrets.FTP_PROD || (github.ref == 'refs/heads/stage' && secrets.FTP_STAGE || secrets.FTP_DEV) }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ./
-          exclude: |
-            node_modules/
-            .git/
-            .github/
-      
+          local-dir: ./deploy/
+          server-dir: ./
+          dangerous-clean-slate: false
+
       - name: 🔄 Restart Node App
         run: |
           mkdir -p tmp
