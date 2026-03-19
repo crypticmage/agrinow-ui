@@ -485,7 +485,7 @@ const DashboardContent = () => {
                         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis dataKey="week" tick={{ fontSize: 11 }} className="fill-muted-foreground" />
                         <YAxis allowDecimals={false} tick={{ fontSize: 11 }} className="fill-muted-foreground" />
-                        <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }} formatter={(v: number) => [v, "Check-ins"]} />
+                        <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }} formatter={(v) => [v ?? 0, "Check-ins"]} />
                         <Area type="monotone" dataKey="count" fill="hsl(var(--primary))" fillOpacity={0.1} stroke="hsl(var(--primary))" strokeWidth={2} />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -521,7 +521,7 @@ const DashboardContent = () => {
                     <YAxis allowDecimals={false} tick={{ fontSize: 11 }} className="fill-muted-foreground" width={28} />
                     <Tooltip
                       contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }}
-                      formatter={(v: number) => [v, "Check-ins"]}
+                      formatter={(v) => [v ?? 0, "Check-ins"]}
                     />
                     <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                   </BarChart>
