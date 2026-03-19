@@ -251,7 +251,7 @@ const DashboardContent = () => {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           {loading ? (
             Array.from({ length: 6 }).map((_, i) => <StatCardSkeleton key={i} />)
           ) : (
@@ -423,9 +423,9 @@ const DashboardContent = () => {
                 </CardHeader>
                 <CardContent>
                   {sitesByMonth.length === 0 ? (
-                    <div className="h-[220px] flex items-center justify-center text-sm text-muted-foreground">No site data yet</div>
+                    <div className="h-[180px] sm:h-[200px] md:h-[220px] flex items-center justify-center text-sm text-muted-foreground">No site data yet</div>
                   ) : (
-                    <ResponsiveContainer width="100%" height={220}>
+                    <ResponsiveContainer width="100%" height={220} minHeight={180}>
                       <BarChart data={sitesByMonth}>
                         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis dataKey="label" tick={{ fontSize: 11 }} className="fill-muted-foreground" />
@@ -450,9 +450,9 @@ const DashboardContent = () => {
                 </CardHeader>
                 <CardContent>
                   {teamByRole.length === 0 ? (
-                    <div className="h-[220px] flex items-center justify-center text-sm text-muted-foreground">No team data yet</div>
+                    <div className="h-[180px] sm:h-[200px] md:h-[220px] flex items-center justify-center text-sm text-muted-foreground">No team data yet</div>
                   ) : (
-                    <ResponsiveContainer width="100%" height={220}>
+                    <ResponsiveContainer width="100%" height={220} minHeight={180}>
                       <BarChart data={teamByRole}>
                         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis dataKey="role" tick={{ fontSize: 11 }} className="fill-muted-foreground" />
@@ -478,9 +478,9 @@ const DashboardContent = () => {
                 </CardHeader>
                 <CardContent>
                   {myWeeklyCheckins.length === 0 ? (
-                    <div className="h-[180px] flex items-center justify-center text-sm text-muted-foreground">No check-in history yet</div>
+                    <div className="h-[150px] sm:h-[165px] md:h-[180px] flex items-center justify-center text-sm text-muted-foreground">No check-in history yet</div>
                   ) : (
-                    <ResponsiveContainer width="100%" height={180}>
+                    <ResponsiveContainer width="100%" height={180} minHeight={150}>
                       <AreaChart data={myWeeklyCheckins}>
                         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis dataKey="week" tick={{ fontSize: 11 }} className="fill-muted-foreground" />
@@ -514,7 +514,7 @@ const DashboardContent = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height={200} minHeight={160}>
                   <BarChart data={attendanceByDay} barSize={14}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                     <XAxis dataKey="day" tick={{ fontSize: 11 }} className="fill-muted-foreground" />
@@ -538,7 +538,7 @@ const DashboardContent = () => {
               </CardHeader>
               <CardContent>
                 {complianceData.length === 0 ? (
-                  <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
+                  <div className="h-[160px] sm:h-[180px] md:h-[200px] flex items-center justify-center text-sm text-muted-foreground">
                     No compliance data yet
                   </div>
                 ) : (
@@ -583,7 +583,7 @@ const DashboardContent = () => {
 
 export function DashboardClient() {
   return (
-    <Suspense fallback={<div className="p-6"><StatCardSkeleton /></div>}>
+    <Suspense fallback={<div className="p-4 sm:p-6"><StatCardSkeleton /></div>}>
       <DashboardContent />
     </Suspense>
   );

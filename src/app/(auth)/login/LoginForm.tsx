@@ -92,7 +92,7 @@ export default function LoginForm() {
           : { boxShadow: "0 32px 80px rgba(0,0,0,0.5)" }
       }
       transition={{ duration: 0.5 }}
-      className="rounded-2xl border border-white/8 bg-white/4 p-8 backdrop-blur-xl relative overflow-hidden"
+      className="rounded-2xl border border-white/8 bg-white/4 p-5 sm:p-8 backdrop-blur-xl relative overflow-hidden"
     >
       {/* Success overlay — fades in on top when login succeeds */}
       <AnimatePresence>

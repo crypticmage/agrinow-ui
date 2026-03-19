@@ -22,7 +22,7 @@ export function MobileBottomNav() {
               href={tab.url}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-2 py-1 text-xs transition-colors cursor-pointer",
+                "flex flex-col items-center gap-1 px-2 py-2 text-xs transition-colors cursor-pointer",
                 active ? "text-primary font-medium" : "text-muted-foreground",
               )}
             >

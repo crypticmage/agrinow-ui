@@ -84,7 +84,7 @@ export default function AttendancePage() {
   const isWorking = hasCheckedIn && !hasCheckedOut
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl">
+    <div className="p-4 sm:p-6 space-y-6 max-w-5xl">
       <PageHeader title="Attendance" subtitle={format(new Date(), "EEEE, MMMM d, yyyy")} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -227,7 +227,7 @@ export default function AttendancePage() {
                     {weather.city}{weather.country ? `, ${weather.country}` : ''}
                   </p>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1 sm:gap-2">
                   {[
                     { icon: ThermometerSun, label: 'Feels like', value: `${weather.feelsLike}°C` },
                     { icon: Droplets, label: 'Humidity', value: `${weather.humidity}%` },
@@ -265,6 +265,7 @@ export default function AttendancePage() {
               <p className="text-sm text-muted-foreground">No check-ins recorded yet today.</p>
             ) : (
               <div className="overflow-x-auto">
+                <div className="min-w-[600px]">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b text-left text-muted-foreground">
@@ -321,6 +322,7 @@ export default function AttendancePage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
           </CardContent>
@@ -342,6 +344,7 @@ export default function AttendancePage() {
             <p className="text-sm text-muted-foreground">No attendance history yet.</p>
           ) : (
             <div className="overflow-x-auto">
+              <div className="min-w-[600px]">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
@@ -364,6 +367,7 @@ export default function AttendancePage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </CardContent>

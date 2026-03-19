@@ -241,12 +241,12 @@ export function TopNav() {
                       setSearchOpen(false);
                     }}
                   >
-                    <Badge variant="outline" className="text-[10px] shrink-0">
+                    <Badge variant="outline" className="text-xs shrink-0">
                       {r.type === "field" ? "site" : "staff"}
                     </Badge>
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{r.name}</p>
-                      <p className="text-[11px] text-muted-foreground truncate">{r.sub}</p>
+                      <p className="text-xs text-muted-foreground truncate">{r.sub}</p>
                     </div>
                   </button>
                 ))
@@ -299,7 +299,7 @@ export function TopNav() {
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 420, damping: 22 }}
-                    className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-0.5 bg-primary text-primary-foreground text-[10px] rounded-full flex items-center justify-center pointer-events-none"
+                    className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-0.5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center pointer-events-none"
                   >
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </motion.span>
@@ -360,7 +360,7 @@ export function TopNav() {
                         <p className={`text-sm ${!isRead ? "font-medium" : "text-muted-foreground"}`}>
                           {meta.label}
                         </p>
-                        <p className="text-[11px] text-muted-foreground truncate">
+                        <p className="text-xs text-muted-foreground truncate">
                           {actor}{timeAgo ? ` · ${timeAgo}` : ""}
                         </p>
                       </div>
@@ -407,7 +407,7 @@ export function TopNav() {
               <p className="text-xs font-semibold leading-none text-foreground">
                 {formatUsername(user?.username || "")}
               </p>
-              <p className="text-[10px] text-muted-foreground capitalize leading-none font-normal">
+              <p className="text-xs text-muted-foreground capitalize leading-none font-normal">
                 {user?.role}
               </p>
             </div>
