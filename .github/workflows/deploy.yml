@@ -37,10 +37,13 @@ jobs:
           username: ${{ github.ref == 'refs/heads/main' && secrets.FTP_PROD || (github.ref == 'refs/heads/stage' && secrets.FTP_STAGE || secrets.FTP_DEV) }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
+          dangerous-clean-slate: true
           exclude: |
             node_modules/
             .git/
             .github/
+            .htaccess
+            
       
       - name: 🔄 Restart Node App
         run: |
