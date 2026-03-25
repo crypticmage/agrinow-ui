@@ -244,6 +244,19 @@
       sans-serif;
   }
 
+  /* Global cursor-pointer for all interactive elements */
+  button,
+  a,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  select,
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
   /* Custom scrollbar */
   * {
     scrollbar-width: thin;

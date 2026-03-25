@@ -8,11 +8,15 @@ interface AppState {
   currentUser: StoreUser | null;
   isAuthenticated: boolean;
   sidebarOpen: boolean;
-  login: (userName: string, email: string, role: AuthRole, exp?: number) => void;
+  appBannerDismissed: boolean;
+  hideAppDownload: boolean;
+  login: (userName: string, email: string, role: AuthRole) => void;
   logout: () => void;
   setRole: (role: AuthRole) => void;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
+  dismissAppBanner: () => void;
+  setHideAppDownload: (hide: boolean) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -21,18 +25,27 @@ export const useAppStore = create<AppState>()(
       currentUser: null,
       isAuthenticated: false,
       sidebarOpen: true,
-      login: (userName, email, role, exp) =>
+      appBannerDismissed: false,
+      hideAppDownload: false,
+      login: (userName, email, role) =>
         set({
-          currentUser: { id: "1", userName, email, role, exp: exp || null },
+          currentUser: { id: "1", userName, email, role },
           isAuthenticated: true,
         }),
-      logout: () => set({ currentUser: null, isAuthenticated: false }),
+      logout: () => {
+        if (typeof document !== "undefined") {
+          document.cookie = "auth-token=; Path=/; max-age=0";
+        }
+        set({ currentUser: null, isAuthenticated: false });
+      },
       setRole: (role) =>
         set((state) => ({
           currentUser: state.currentUser ? { ...state.currentUser, role } : null,
         })),
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
+      dismissAppBanner: () => set({ appBannerDismissed: true }),
+      setHideAppDownload: (hide) => set({ hideAppDownload: hide }),
     }),
     {
       name: "seedsense-storage",

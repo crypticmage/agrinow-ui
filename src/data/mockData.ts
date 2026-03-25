@@ -5,7 +5,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s1",
     name: "Suresh Patel",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43210",
     status: "active",
     attendance: 22,
@@ -14,7 +14,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s2",
     name: "Anita Sharma",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43211",
     status: "active",
     attendance: 20,
@@ -23,7 +23,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s3",
     name: "Vikram Singh",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43212",
     status: "on-leave",
     attendance: 15,
@@ -32,7 +32,7 @@ export const mockStaff: StaffMember[] = [
   {
     id: "s4",
     name: "Meena Devi",
-    role: "staff",
+    role: "farmer",
     phone: "+91 98765 43213",
     status: "active",
     attendance: 24,

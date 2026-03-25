@@ -436,9 +436,7 @@ export default function OrganisationChart() {
             backgroundSize: "32px 32px",
           }}
         />
-        <div
-          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/50 to-white/0 dark:from-transparent dark:to-transparent"
-        />
+        <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-slate-50/50 to-white/0 dark:from-transparent dark:to-transparent" />
         {/* Subtle radial glow in light mode */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.03),transparent_70%)] dark:hidden" />
 

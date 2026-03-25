@@ -70,6 +70,25 @@ export function TableSkeleton({
   );
 }
 
+export function ChatSkeleton({ count = 4 }: { count?: number }) {
+  return (
+    <div className="space-y-4 p-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className={`flex gap-3 ${i % 2 === 0 ? "" : "flex-row-reverse"}`}
+        >
+          <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+          <div className="space-y-1.5 max-w-[70%]">
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-12 w-48 rounded-lg" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function UserRowSkeleton() {
   return (
     <tr className="border-b last:border-0">
@@ -98,5 +117,15 @@ export function UserRowSkeleton() {
         <Skeleton className="h-8 w-8 rounded" />
       </td>
     </tr>
+  );
+}
+
+export function MapSkeleton() {
+  return (
+    <Card>
+      <CardContent className="p-0">
+        <Skeleton className="w-full h-125 rounded-lg" />
+      </CardContent>
+    </Card>
   );
 }

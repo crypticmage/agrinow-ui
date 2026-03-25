@@ -1,4 +1,4 @@
-export type AuthRole = "admin" | "manager" | "staff" | null;
+export type AuthRole = "admin" | "manager" | "farmer" | "agent" | "analyst" | null;
 
 export interface AuthUser {
   id: string;
@@ -6,7 +6,6 @@ export interface AuthUser {
   email: string;
   role: AuthRole;
   avatar?: string;
-  exp?: number | null;
 }
 
 export interface LoginCredentials {

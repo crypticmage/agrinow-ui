@@ -86,3 +86,17 @@ export const useDeleteUser = () => {
     },
   });
 };
+
+export function useManagerDropdown(enabled = true) {
+  return useQuery({
+    queryKey: ["users", "manager-dropdown"],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<
+        { id: number; username: string; first_name: string; last_name: string }[]
+      >("/users/manager_dropdown");
+      return data;
+    },
+    enabled,
+    staleTime: 5 * 60_000,
+  });
+}

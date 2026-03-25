@@ -29,11 +29,8 @@ export const useLogin = () => {
       const token: string = data?.access_token;
 
       if (typeof document !== "undefined" && token) {
-        // NOTE: SameSite=Strict & Secure commented out during testing phase
-        // (UI and backend are on different origins). Re-enable in production.
-        // const isSecure = window.location.protocol === "https:" ? "; Secure" : "";
-        // document.cookie = `auth-token=${encodeURIComponent(token)}; Path=/; SameSite=Strict${isSecure}`;
-        document.cookie = `auth-token=${encodeURIComponent(token)}; Path=/; SameSite=Lax`;
+        const isSecure = window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `auth-token=${encodeURIComponent(token)}; Path=/; SameSite=Lax${isSecure}`;
       }
 
       // Update Zustand store with user info from API response
@@ -42,21 +39,8 @@ export const useLogin = () => {
       const role = data?.user?.role ?? data?.role;
       const email: string = data?.user?.email ?? data?.email ?? "";
 
-      let exp: number | undefined;
-      if (token) {
-        try {
-          const parts = token.split(".");
-          if (parts.length === 3) {
-            const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
-            const payload = JSON.parse(payloadJson);
-            exp = payload.exp;
-          }
-        } catch (e) {
-        }
-      }
-
       if (username && role) {
-        loginStore.login(username, email, role, exp);
+        loginStore.login(username, email, role);
       }
 
       // Navigate to dashboard with a flag so it can show its own entry animation.
