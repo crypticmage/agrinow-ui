@@ -9,6 +9,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
@@ -29,23 +30,44 @@ jobs:
       - name: 🏗️ Build Project
         run: pnpm run build
 
-      - name: 📂 Sync to cPanel
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          # This logic picks the right FTP user based on the branch
-          username: ${{ github.ref == 'refs/heads/main' && secrets.FTP_PROD || (github.ref == 'refs/heads/stage' && secrets.FTP_STAGE || secrets.FTP_DEV) }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: ./
-          dangerous-clean-slate: true
-          exclude: |
-            node_modules/
-            .git/
-            .github/
-            .htaccess
-            
-      
-      - name: 🔄 Restart Node App
+      - name: 🗜️ Assemble and zip standalone output
         run: |
-          mkdir -p tmp
-          touch tmp/restart.txt
+          mkdir -p deploy
+
+          # Standalone server + minimal node_modules (only runtime deps)
+          cp .next/standalone/server.js   deploy/server.js
+          cp .next/standalone/package.json deploy/package.json
+          cp -r .next/standalone/node_modules deploy/node_modules
+          cp -r .next/standalone/.next    deploy/.next
+
+          # Static assets and public folder
+          cp -r .next/static              deploy/.next/static
+          cp -r public                    deploy/public
+
+          zip -r deploy.zip deploy
+
+      - name: 📤 Upload zip to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: deploy.zip
+          target: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_PATH_PROD || (github.ref == 'refs/heads/stage' && secrets.DEPLOY_PATH_STAGE || secrets.DEPLOY_PATH_DEV) }}
+
+      - name: 🔓 Unzip and restart on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            DEPLOY_PATH="${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_PATH_PROD || (github.ref == 'refs/heads/stage' && secrets.DEPLOY_PATH_STAGE || secrets.DEPLOY_PATH_DEV) }}"
+            cd "$DEPLOY_PATH"
+            unzip -o deploy.zip
+            rm -f deploy.zip
+            cp -r deploy/* .
+            rm -rf deploy
+            mkdir -p tmp && touch tmp/restart.txt
