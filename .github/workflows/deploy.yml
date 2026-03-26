@@ -68,6 +68,6 @@ jobs:
             cd "$DEPLOY_PATH"
             unzip -o deploy.zip
             rm -f deploy.zip
-            cp -r deploy/* .
+            cp -r deploy/. .
             rm -rf deploy
             mkdir -p tmp && touch tmp/restart.txt
